@@ -1,14 +1,12 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { getStripe } from "@/lib/stripe"
 import Stripe from "stripe"
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-12-18.acacia",
-})
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
 export async function POST(req: Request) {
+  const stripe = getStripe()
   const body = await req.text()
   const signature = req.headers.get("Stripe-Signature")
 
@@ -64,4 +62,4 @@ export async function POST(req: Request) {
     console.error("[WEBHOOK_ERROR]", error)
     return new NextResponse("Webhook handler failed", { status: 500 })
   }
-} 
+}

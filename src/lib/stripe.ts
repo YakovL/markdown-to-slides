@@ -1,12 +1,20 @@
 import Stripe from "stripe"
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-12-18.acacia" as Stripe.LatestApiVersion,
-  typescript: true,
-})
+let stripeInstance: Stripe | null = null
+
+export function getStripe() {
+  if (!stripeInstance) {
+    stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+      apiVersion: "2024-12-18.acacia" as Stripe.LatestApiVersion,
+      typescript: true,
+    })
+  }
+
+  return stripeInstance
+}
 
 export async function createStripeCustomer(email: string, userId: string) {
-  return stripe.customers.create({
+  return getStripe().customers.create({
     email,
     metadata: {
       userId,
@@ -15,7 +23,7 @@ export async function createStripeCustomer(email: string, userId: string) {
 }
 
 export async function createCheckoutSession(customerId: string, userId: string) {
-  return stripe.checkout.sessions.create({
+  return getStripe().checkout.sessions.create({
     customer: customerId,
     line_items: [
       {
@@ -36,8 +44,8 @@ export async function createBillingPortalSession(
   customerId: string,
   returnUrl?: string
 ) {
-  return stripe.billingPortal.sessions.create({
+  return getStripe().billingPortal.sessions.create({
     customer: customerId,
     return_url: returnUrl ?? `${process.env.NEXT_PUBLIC_APP_URL}/billing`,
   })
-} 
+}

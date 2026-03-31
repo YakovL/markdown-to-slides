@@ -2,11 +2,7 @@ import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-import Stripe from "stripe"
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-12-18.acacia",
-})
+import { getStripe } from "@/lib/stripe"
 
 export async function POST() {
   try {
@@ -28,6 +24,7 @@ export async function POST() {
 
     let customerId = user.stripeCustomerId
 
+    const stripe = getStripe()
     if (!customerId) {
       const customer = await stripe.customers.create({
         email: session.user.email!,
@@ -69,4 +66,4 @@ export async function POST() {
     console.error("[SUBSCRIPTION]", error)
     return new NextResponse("Internal error", { status: 500 })
   }
-} 
+}
