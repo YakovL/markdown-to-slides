@@ -1,8 +1,14 @@
 import OpenAI from "openai"
 
-export const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+let openaiInstance: OpenAI | null = null
+export function getOpenAI() {
+  if (!openaiInstance) {
+    openaiInstance = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    })
+  }
+  return openaiInstance
+}
 
 export async function generateSlides(topic: string, prompt: string) {
   const systemPrompt = `You are a presentation expert that creates well-structured markdown content for slides.
@@ -20,7 +26,7 @@ export async function generateSlides(topic: string, prompt: string) {
 
   const userPrompt = `Create a presentation on: ${topic}\n\nAdditional instructions: ${prompt}\n\nGenerate markdown content formatted as slides.`
 
-  const response = await openai.chat.completions.create({
+  const response = await getOpenAI().chat.completions.create({
     model: "gpt-4",
     messages: [
       { role: "system", content: systemPrompt },
@@ -49,7 +55,7 @@ export async function enhanceSlides(markdown: string) {
 
   const userPrompt = `Enhance the following markdown slides while maintaining their structure:\n\n${markdown}\n\nMake the content more engaging and professional while keeping the same basic format.`
 
-  const response = await openai.chat.completions.create({
+  const response = await getOpenAI().chat.completions.create({
     model: "gpt-4",
     messages: [
       { role: "system", content: systemPrompt },
@@ -78,7 +84,7 @@ export async function translateSlides(markdown: string, targetLanguage: string) 
 
   const userPrompt = `Translate the following markdown presentation to ${targetLanguage}:\n\n${markdown}`
 
-  const response = await openai.chat.completions.create({
+  const response = await getOpenAI().chat.completions.create({
     model: "gpt-4",
     messages: [
       { role: "system", content: systemPrompt },

@@ -2,11 +2,7 @@ import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-import OpenAI from "openai"
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+import { getOpenAI } from "@/lib/openai"
 
 export async function POST(req: Request) {
   try {
@@ -72,7 +68,7 @@ export async function POST(req: Request) {
     const userPrompt = `Translate the following markdown presentation to ${targetLanguage}:\n\n${markdown}`
 
     try {
-      const response = await openai.chat.completions.create({
+      const response = await getOpenAI().chat.completions.create({
         model: "gpt-4",
         messages: [
           { role: "system", content: systemPrompt },
@@ -105,4 +101,4 @@ export async function POST(req: Request) {
       { status: 500 }
     )
   }
-} 
+}

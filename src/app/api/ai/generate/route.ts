@@ -2,11 +2,7 @@ import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-import OpenAI from "openai"
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+import { getOpenAI } from "@/lib/openai"
 
 export async function POST(req: Request) {
   try {
@@ -64,7 +60,7 @@ export async function POST(req: Request) {
 
     const userPrompt = `Create a presentation on: ${topic}\n\nAdditional instructions: ${prompt}\n\nGenerate markdown content formatted as slides.`
 
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: "gpt-4",
       messages: [
         { role: "system", content: systemPrompt },
@@ -81,4 +77,4 @@ export async function POST(req: Request) {
     console.error("[AI_GENERATE_ERROR]", error)
     return new NextResponse("Internal Error", { status: 500 })
   }
-} 
+}
