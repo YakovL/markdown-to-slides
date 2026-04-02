@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react'
@@ -40,6 +41,35 @@ export function SlidePreview({
     }
     return 'Untitled Slide'
   }
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (isFullscreen) {
+        switch (event.key) {
+          case 'ArrowLeft':
+            event.preventDefault()
+            onPrevSlide()
+            break
+          case 'ArrowRight':
+            event.preventDefault()
+            onNextSlide()
+            break
+          case 'Home':
+            event.preventDefault()
+            setCurrentSlide(0)
+            break
+          case 'End':
+            event.preventDefault()
+            setCurrentSlide(slides.length - 1)
+            break
+        }
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [currentSlide, slides.length, isFullscreen, onPrevSlide, onNextSlide, onToggleFullscreen])
 
   return (
     <Card className={cn(
