@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Maximize2, Minimize2 } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
@@ -42,6 +42,7 @@ export function SlidePreview({
     return 'Untitled Slide'
   }
 
+  const fullscreenOffHotkey = 'Escape'
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (isFullscreen) {
@@ -61,6 +62,10 @@ export function SlidePreview({
           case 'End':
             event.preventDefault()
             setCurrentSlide(slides.length - 1)
+            break
+          case fullscreenOffHotkey:
+            event.preventDefault()
+            onToggleFullscreen()
             break
         }
       }
@@ -86,9 +91,12 @@ export function SlidePreview({
             variant="ghost"
             size="icon"
             onClick={onToggleFullscreen}
+            title={isFullscreen ? `Exit fullscreen (${fullscreenOffHotkey})` : undefined}
             className="ml-2"
           >
-            <Maximize2 className="h-4 w-4" />
+            {isFullscreen ?
+              <Minimize2 className="h-4 w-4" /> :
+              <Maximize2 className="h-4 w-4" />}
           </Button>
         </div>
       </CardHeader>
