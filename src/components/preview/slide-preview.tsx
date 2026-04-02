@@ -17,6 +17,7 @@ interface SlidePreviewProps {
   onPrevSlide: () => void
   onNextSlide: () => void
   onToggleFullscreen: () => void
+  setCurrentSlide: (slide: number) => void
 }
 
 export function SlidePreview({
@@ -27,6 +28,7 @@ export function SlidePreview({
   onPrevSlide,
   onNextSlide,
   onToggleFullscreen,
+  setCurrentSlide,
 }: SlidePreviewProps) {
   const currentSlideContent = slides[currentSlide] || ""
 
@@ -126,6 +128,7 @@ export function SlidePreview({
             <div className="flex gap-1">
               {slides.map((_, index) => (
                 <div
+                  onClick={() => setCurrentSlide(index)}
                   key={index}
                   className={cn(
                     "w-2 h-2 rounded-full transition-colors",

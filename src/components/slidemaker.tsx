@@ -105,6 +105,7 @@ export function SlideMaker() {
               onPrevSlide={prevSlide}
               onNextSlide={nextSlide}
               onToggleFullscreen={toggleFullscreen}
+              setCurrentSlide={setCurrentSlide}
             />
             <div className="mt-4 flex items-center justify-center gap-6 text-sm text-foreground">
               <a
