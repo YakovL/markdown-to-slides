@@ -32,6 +32,15 @@ export function SlidePreview({
 }: SlidePreviewProps) {
   const currentSlideContent = slides[currentSlide] || ""
 
+  const guessSlideTitle = (slideText: string) => {
+    const lines = slideText.split('\n')
+    const firstLine = lines[0]?.trim()
+    if (firstLine.startsWith('#')) {
+      return firstLine.replace(/^#+\s*/, '')
+    }
+    return 'Untitled Slide'
+  }
+
   return (
     <Card className={cn(
       "relative flex flex-col overflow-hidden min-h-[600px]",
@@ -126,10 +135,11 @@ export function SlidePreview({
           </Button>
           <div className="flex-1 flex justify-center">
             <div className="flex gap-1">
-              {slides.map((_, index) => (
+              {slides.map((slideText, index) => (
                 <div
                   onClick={() => setCurrentSlide(index)}
                   key={index}
+                  title={guessSlideTitle(slideText)}
                   className={cn(
                     "w-2 h-2 rounded-full transition-colors",
                     index === currentSlide
