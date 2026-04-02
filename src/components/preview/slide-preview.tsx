@@ -43,15 +43,21 @@ export function SlidePreview({
   }
 
   const fullscreenOffHotkey = 'Escape'
+  const nextSlideHotkey = 'ArrowRight'
+  const prevSlideHotkey = 'ArrowLeft'
+  const hotkeyLabels = {
+    ArrowRight: '→',
+    ArrowLeft: '←',
+  }
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (isFullscreen) {
         switch (event.key) {
-          case 'ArrowLeft':
+          case prevSlideHotkey:
             event.preventDefault()
             onPrevSlide()
             break
-          case 'ArrowRight':
+          case nextSlideHotkey:
             event.preventDefault()
             onNextSlide()
             break
@@ -91,7 +97,8 @@ export function SlidePreview({
             variant="ghost"
             size="icon"
             onClick={onToggleFullscreen}
-            title={isFullscreen ? `Exit fullscreen (${fullscreenOffHotkey})` : undefined}
+            title={isFullscreen ? `Exit fullscreen (hotkey: ${fullscreenOffHotkey})` : undefined}
+            aria-keyshortcuts={fullscreenOffHotkey}
             className="ml-2"
           >
             {isFullscreen ?
@@ -167,6 +174,8 @@ export function SlidePreview({
             onClick={onPrevSlide}
             disabled={currentSlide === 0}
             className="w-[100px]"
+            title={`Previous slide (hotkey: ${hotkeyLabels[prevSlideHotkey]})`}
+            aria-keyshortcuts={prevSlideHotkey}
           >
             <ChevronLeft className="mr-2 h-4 w-4" />
             Previous
@@ -193,6 +202,8 @@ export function SlidePreview({
             onClick={onNextSlide}
             disabled={currentSlide === slides.length - 1}
             className="w-[100px]"
+            title={`Next slide (${hotkeyLabels[nextSlideHotkey]})`}
+            aria-keyshortcuts={nextSlideHotkey}
           >
             Next
             <ChevronRight className="ml-2 h-4 w-4" />
