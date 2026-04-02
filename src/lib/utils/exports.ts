@@ -11,7 +11,7 @@ import pptxgen from 'pptxgenjs'
 import type { SlideTheme } from '@/types/theme'
 
 interface MarkdownComponentProps {
-  children: ReactNode
+  children?: ReactNode
   href?: string
   inline?: boolean
   style?: CSSProperties
