@@ -95,14 +95,13 @@ export function SlidePreview({
                   p: ({ children }) => (
                     <p style={{ fontFamily: theme?.fonts.body }}>{children}</p>
                   ),
-                  code: ({ inline, children }) => (
-                    inline ? (
+                  code: ({ children }) => (
+                    <code style={{ fontFamily: theme?.fonts.code }}>{children}</code>
+                  ),
+                  pre: ({ children }) => (
+                    <pre>
                       <code style={{ fontFamily: theme?.fonts.code }}>{children}</code>
-                    ) : (
-                      <pre>
-                        <code style={{ fontFamily: theme?.fonts.code }}>{children}</code>
-                      </pre>
-                    )
+                    </pre>
                   ),
                 }}
               >
